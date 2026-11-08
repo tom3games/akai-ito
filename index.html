@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>運命の赤い糸をたどれ</title>
+<meta name="description" content="小指から伸びる赤い糸を指でなぞって、満員電車・商店街・合コン・結婚式場・河川敷を抜ける。結び目をほどき、色あせた糸やほつれた糸を避けた先に待っているのは、美形か、元恋人か、自販機か。結末は9種類。">
+<meta property="og:type" content="website">
+<meta property="og:title" content="運命の赤い糸をたどれ">
+<meta property="og:description" content="小指の赤い糸をなぞって運命の人へ。結び目をほどき、偽物の糸を避けた先にいたのは、店のおじいちゃん、猫、それとも自販機。結末は9種類。">
+<meta property="og:image" content="https://tom3games.github.io/akai-ito/og.png">
+<meta property="og:url" content="https://tom3games.github.io/akai-ito/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#232c57">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Yuji+Syuku&family=BIZ+UDPGothic:wght@400;700&display=swap" rel="stylesheet">
+<style>
+[hidden]{display:none!important}
+:root{--paper:#efe5cf;--paper2:#e4d8bd;--ink:#232c57;--ink2:#46507a;--mid:#9097b3;--red:#d3202e;--redD:#8f1420;--brush:"Yuji Syuku","Hiragino Mincho ProN",serif;--sans:"BIZ UDPGothic","Hiragino Sans","Noto Sans JP",system-ui,sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}
+html{touch-action:manipulation;-webkit-text-size-adjust:100%;text-size-adjust:100%;background:#232c57}
+body{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;font-family:var(--sans);color:var(--ink);overflow:hidden;height:100svh;background:#232c57}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+a{-webkit-tap-highlight-color:transparent}
+button,canvas{touch-action:manipulation}
+#cv{position:fixed;inset:0;width:100%;height:100%;z-index:0;display:block}
+.view{position:fixed;inset:0;height:100svh;overflow:hidden;z-index:2}
+#boot-err{position:fixed;inset:auto 8px 8px 8px;z-index:99;background:#fff;color:#b00;font:12px/1.4 monospace;white-space:pre-wrap;padding:10px;border-radius:8px}
+
+/* ロード画面: 糸巻きから糸がのびる */
+#vLoad{background:var(--paper);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;z-index:20}
+#spool{width:74px;height:74px;animation:spin 2.4s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+#loadLine{width:min(70vw,260px);height:3px;background:rgba(35,44,87,.12);position:relative;border-radius:2px}
+#loadBar{position:absolute;left:0;top:0;height:3px;width:0;background:var(--red);transition:width .25s}
+#loadTxt{font-family:var(--brush);font-size:18px;letter-spacing:.08em}
+
+/* タイトル */
+#vTitle{display:flex;flex-direction:column;padding:calc(10px + env(safe-area-inset-top)) 16px calc(12px + env(safe-area-inset-bottom))}
+#vTitle::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(239,229,207,.92) 0%,rgba(239,229,207,.55) 34%,rgba(239,229,207,0) 52%,rgba(239,229,207,0) 62%,rgba(239,229,207,.9) 80%);pointer-events:none}
+.topBtns{position:relative;display:flex;justify-content:flex-end;gap:6px;flex:none}
+.sbtn{min-width:44px;min-height:40px;padding:0 10px;font-size:13px;font-weight:700;color:var(--ink);border:1.5px solid rgba(35,44,87,.55);border-radius:4px;background:rgba(239,229,207,.75)}
+.sbtn svg{display:block;margin:auto}
+#tHead{position:relative;margin-top:2vh;flex:none}
+#tTitle{font-family:var(--brush);font-weight:400;font-size:clamp(38px,12vw,56px);line-height:1.08;letter-spacing:.02em;color:var(--ink)}
+#tTitle .r{color:var(--red)}
+#tSub{margin-top:8px;font-size:14px;color:var(--ink2);font-weight:700}
+.grow{flex:1 1 auto;min-height:10px}
+#tActs{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:6px;flex:none}
+/* 一番押すボタンは紙の荷札（穴に赤い糸） */
+#bStart{position:relative;display:flex;align-items:center;gap:12px;min-height:58px;padding:0 30px 0 22px;background:var(--paper);border:2px solid var(--ink);border-radius:3px 14px 14px 3px;font-family:var(--brush);font-size:28px;color:var(--ink);box-shadow:3px 4px 0 var(--ink)}
+#bStart::before{content:"";width:12px;height:12px;border-radius:50%;border:2px solid var(--ink);background:#e9dcc0;flex:none}
+#bStart::after{content:"";position:absolute;left:26px;top:50%;width:46px;height:3px;background:var(--red);transform:translate(-100%,-50%) rotate(-18deg);transform-origin:right center;border-radius:2px}
+#bStart:active{transform:translate(2px,3px);box-shadow:1px 1px 0 var(--ink)}
+.tlink{min-height:40px;padding:0 4px;font-size:15px;font-weight:700;color:var(--ink);text-decoration:underline;text-decoration-color:rgba(211,32,46,.7);text-underline-offset:5px;text-decoration-thickness:2px}
+#tFoot{position:relative;display:flex;gap:14px;margin-top:6px;font-size:11px;flex:none}
+#tFoot a{color:var(--ink2);min-height:24px;display:inline-flex;align-items:center}
+
+/* 遊び中 */
+#vPlay{touch-action:none;cursor:crosshair}
+#hud{position:absolute;left:0;right:0;top:0;display:flex;justify-content:space-between;align-items:flex-start;padding:calc(6px + env(safe-area-inset-top)) 10px 0;pointer-events:none}
+#watch{display:flex;align-items:center;gap:6px;background:rgba(239,229,207,.88);border:1.5px solid var(--ink);border-radius:22px;padding:3px 10px 3px 3px;pointer-events:none}
+#watch svg{width:34px;height:34px;display:block}
+#wTime{font:700 17px/1 ui-monospace,"SF Mono",Menlo,monospace;letter-spacing:.02em;color:var(--ink)}
+#watch.hurry{border-color:var(--red)}
+#watch.hurry #wTime{color:var(--red)}
+#hudR{display:flex;gap:6px;pointer-events:auto}
+#hint{position:absolute;left:50%;top:calc(58px + env(safe-area-inset-top));transform:translateX(-50%);white-space:nowrap;font-size:15px;font-weight:700;color:var(--paper);background:rgba(35,44,87,.86);padding:7px 14px;border-radius:4px;pointer-events:none;opacity:0;transition:opacity .25s}
+#hint.show{opacity:1}
+#card{position:absolute;left:50%;top:calc(64px + env(safe-area-inset-top));transform:translate(-50%,-20px);text-align:center;pointer-events:none;opacity:0;padding:8px 18px 10px;background:var(--paper);border:2px solid var(--ink);box-shadow:3px 4px 0 rgba(35,44,87,.5)}
+#card::before{content:"";position:absolute;left:50%;top:-18px;width:2px;height:18px;background:var(--ink)}
+#card.show{animation:card 2.1s ease-out forwards}
+@keyframes card{0%{opacity:0;transform:translate(-50%,-30px) rotate(-4deg)}14%{opacity:1;transform:translate(-50%,0) rotate(2deg)}24%{transform:translate(-50%,0) rotate(-1deg)}80%{opacity:1}100%{opacity:0;transform:translate(-50%,0)}}
+#cNo{font-size:12px;font-weight:700;color:var(--ink2)}
+#cName{font-family:var(--brush);font-size:25px;line-height:1.2;white-space:nowrap}
+#cGag{font-size:12px;color:var(--ink2);margin-top:2px}
+#reveal{position:absolute;left:0;right:0;bottom:12%;text-align:center;pointer-events:none;padding:0 16px}
+#rvPre{font-size:14px;font-weight:700;color:var(--ink);opacity:0;transition:opacity .4s}
+#rvName{font-family:var(--brush);font-size:clamp(28px,9vw,40px);line-height:1.2;color:var(--ink);opacity:0;transform:scale(1.4);transition:opacity .25s,transform .35s cubic-bezier(.2,1.4,.4,1)}
+#rvLine{font-size:16px;font-weight:700;color:var(--ink2);margin-top:6px;opacity:0;transition:opacity .4s .3s}
+#rvNext{font-size:12px;color:var(--ink2);margin-top:14px;opacity:0;transition:opacity .4s}
+#reveal.pre #rvPre,#reveal.on #rvName,#reveal.on #rvLine,#reveal.next #rvNext{opacity:1}
+#reveal.on #rvName{transform:none}
+#reveal.on #rvPre{opacity:0}
+#rvName,#rvLine,#rvPre{text-shadow:0 0 6px var(--paper),0 0 12px var(--paper)}
+#vPause{position:absolute;inset:0;background:rgba(35,44,87,.6);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;z-index:5}
+#vPause b{font-family:var(--brush);font-size:30px;color:var(--paper);font-weight:400}
+.pbtn{min-height:48px;min-width:160px;padding:0 20px;background:var(--paper);border:2px solid var(--ink);border-radius:4px;font-size:16px;font-weight:700}
+
+/* 結果: おみくじの紙 */
+#vResult{display:flex;justify-content:center;align-items:stretch;padding:calc(8px + env(safe-area-inset-top)) 12px calc(8px + env(safe-area-inset-bottom));background:rgba(35,44,87,.55)}
+#slip{position:relative;width:min(100%,420px);display:flex;flex-direction:column;align-items:center;background:var(--paper);border:1.5px solid var(--ink);padding:10px 14px 10px;box-shadow:0 6px 24px rgba(0,0,0,.35)}
+#slip::before{content:"";position:absolute;inset:4px;border:1px solid rgba(35,44,87,.35);pointer-events:none}
+#rHead{display:flex;align-items:center;gap:8px;flex:none;width:100%}
+#rStamp{width:30px;height:30px;flex:none;border:2px solid var(--red);color:var(--red);font-family:var(--brush);font-size:20px;line-height:26px;text-align:center;border-radius:3px;transform:rotate(-6deg)}
+#rLead{font-size:13px;font-weight:700;color:var(--ink2)}
+#rPicWrap{flex:1 1 auto;min-height:110px;width:100%;position:relative;margin:4px 0}
+#rPic{position:absolute;inset:0;width:100%;height:100%}
+#rName{font-family:var(--brush);font-size:clamp(24px,7.4vw,32px);line-height:1.2;text-align:center;flex:none}
+#rLine{font-size:15px;font-weight:700;color:var(--ink2);flex:none;text-align:center}
+#rStats{font-size:13px;white-space:nowrap;color:var(--ink2);margin-top:4px;flex:none;font-variant-numeric:tabular-nums}
+#rStats b{font-size:20px;color:var(--ink);margin-right:2px}
+#rNew{margin-left:8px;color:var(--red);font-weight:700;border:1.5px solid var(--red);border-radius:3px;padding:0 5px;font-size:12px;white-space:nowrap}
+#rLead{display:flex;align-items:center;flex-wrap:wrap}
+.acts{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;width:100%;margin-top:8px;flex:none}
+#bAgain{grid-column:1/-1;min-height:48px;background:var(--ink);color:var(--paper);border-radius:4px;font-size:17px;font-weight:700}
+.acts .mbtn{min-height:38px;border:1.5px solid rgba(35,44,87,.6);border-radius:4px;font-size:13px;font-weight:700;padding:0 4px}
+.acts #tmSupport{grid-column:1/-1;margin:2px auto 0!important}
+#affBox{display:flex;flex-direction:column;align-items:center;gap:2px;width:100%;flex:none;margin-top:6px}
+#bAff{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:38px;max-width:100%;padding:0 12px;border-radius:4px;border:1px solid rgba(35,44,87,.45);color:var(--ink);font-size:14px;font-weight:700;text-decoration:none;line-height:1.25;text-align:left}
+#bAff .pr{flex:none;font-size:13px;font-weight:700;border:1.5px solid var(--ink);border-radius:3px;padding:0 5px;line-height:1.45}
+#affNote{font-size:12px;color:var(--ink2)}
+
+/* 遊び方・図鑑 */
+.ovl{position:fixed;inset:0;z-index:30;background:rgba(35,44,87,.6);display:flex;justify-content:center;align-items:center;padding:calc(10px + env(safe-area-inset-top)) 12px calc(10px + env(safe-area-inset-bottom))}
+.sheet{position:relative;width:min(100%,420px);max-height:100%;display:flex;flex-direction:column;background:var(--paper);border:1.5px solid var(--ink);padding:14px 16px 12px;box-shadow:0 6px 24px rgba(0,0,0,.35)}
+.sheet h2{font-family:var(--brush);font-weight:400;font-size:26px;line-height:1.2;flex:none}
+.rules{list-style:none;display:flex;flex-direction:column;gap:10px;margin-top:10px;flex:1 1 auto;min-height:0}
+.rules li{display:flex;gap:10px;align-items:center}
+.rules svg{width:64px;height:56px;flex:none;background:#e7dcc3;border:1px solid rgba(35,44,87,.3)}
+.rules b{display:block;font-size:15px}
+.rules span{display:block;font-size:12.5px;line-height:1.5;color:var(--ink2)}
+#howFoot{font-size:12.5px;line-height:1.5;margin-top:10px;font-weight:700;flex:none}
+#howCredit{font-size:10.5px;color:var(--ink2);margin-top:6px;flex:none}
+.close{margin-top:10px;min-height:46px;background:var(--ink);color:var(--paper);border-radius:4px;font-size:16px;font-weight:700;flex:none}
+#bookGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:10px;flex:1 1 auto;min-height:0}
+.cell{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;border:1px solid rgba(35,44,87,.3);background:#e9dfc6;padding:4px 3px 5px;min-height:0;overflow:hidden}
+.cell canvas{width:100%;flex:1 1 auto;min-height:0;display:block}
+.cell b{font-size:11px;line-height:1.25;text-align:center;margin-top:2px}
+.cell i{font-style:normal;font-size:10px;line-height:1.25;color:var(--ink2);text-align:center}
+.cell.lock b{color:var(--mid)}
+#bookCount{font-size:13px;font-weight:700;color:var(--ink2);margin-top:2px;flex:none}
+</style>
+</head>
+<body>
+<canvas id="cv"></canvas>
+
+<main id="vLoad" class="view">
+  <svg id="spool" viewBox="0 0 74 74" aria-hidden="true">
+    <rect x="16" y="8" width="42" height="7" rx="2" fill="#232c57"/><rect x="16" y="59" width="42" height="7" rx="2" fill="#232c57"/>
+    <rect x="21" y="15" width="32" height="44" fill="#d3202e"/>
+    <g stroke="#8f1420" stroke-width="1.4"><path d="M21 22h32M21 29h32M21 36h32M21 43h32M21 50h32"/></g>
+  </svg>
+  <div id="loadLine"><div id="loadBar"></div></div>
+  <div id="loadTxt">糸をたぐり寄せ中</div>
+</main>
+
+<main id="vTitle" class="view" hidden>
+  <div class="topBtns"><button class="sbtn" id="bLang">EN</button><button class="sbtn" id="bMute" aria-label="sound"></button></div>
+  <div id="tHead"><h1 id="tTitle"></h1><p id="tSub"></p></div>
+  <div class="grow"></div>
+  <div id="tActs">
+    <button id="bStart">たどる</button>
+    <div style="display:flex;gap:16px"><button class="tlink" id="bHow">遊び方</button><button class="tlink" id="bBook">図鑑</button></div>
+  </div>
+  <div id="tFoot"><a id="lMore" href="https://tom3games.github.io/" target="_blank" rel="noopener">ほかのバカゲー</a><a id="lPriv" href="privacy.html" target="_blank" rel="noopener">プライバシー</a></div>
+</main>
+
+<main id="vPlay" class="view" hidden>
+  <div id="hud">
+    <div id="watch"><svg viewBox="0 0 34 34" aria-hidden="true"><circle cx="17" cy="17" r="15" fill="#efe5cf" stroke="#232c57" stroke-width="2"/><g stroke="#232c57" stroke-width="1.4"><path d="M17 4v3M17 27v3M4 17h3M27 17h3"/></g><line id="wH" x1="17" y1="17" x2="17" y2="10" stroke="#232c57" stroke-width="2.4" stroke-linecap="round"/><line id="wM" x1="17" y1="17" x2="17" y2="6" stroke="#d3202e" stroke-width="1.6" stroke-linecap="round"/><circle cx="17" cy="17" r="1.8" fill="#232c57"/></svg><span id="wTime">18:00</span></div>
+    <div id="hudR"><button class="sbtn" id="bMute2" aria-label="sound"></button><button class="sbtn" id="bPause" aria-label="pause"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M3 2h3v10H3zM8 2h3v10H8z" fill="#232c57"/></svg></button></div>
+  </div>
+  <div id="hint"></div>
+  <div id="card"><div id="cNo"></div><div id="cName"></div><div id="cGag"></div></div>
+  <div id="reveal"><div id="rvPre"></div><div id="rvName"></div><div id="rvLine"></div><div id="rvNext"></div></div>
+  <div id="vPause" hidden><b id="pTitle">ひと休み</b><button class="pbtn" id="bResume">つづける</button><button class="pbtn" id="bQuit">やめる</button></div>
+</main>
+
+<main id="vResult" class="view" hidden>
+  <div id="slip">
+    <div id="rHead"><div id="rStamp">縁</div><div id="rLead"></div></div>
+    <div id="rPicWrap"><canvas id="rPic"></canvas></div>
+    <div id="rName"></div>
+    <div id="rLine"></div>
+    <div id="rStats"></div>
+    <div class="acts">
+      <button id="bAgain">もう一回</button>
+      <button class="mbtn" id="bBookR">図鑑</button><button class="mbtn" id="bPost">Xでポスト</button><button class="mbtn" id="bSave">画像を保存</button>
+    </div>
+    <div id="affBox" hidden><a id="bAff" target="_blank" rel="sponsored noopener"><span class="pr">PR</span><span id="affTxt"></span></a><small id="affNote"></small></div>
+  </div>
+</main>
+
+<div id="ovHow" class="ovl" hidden><div class="sheet">
+  <h2 id="howTitle">遊び方</h2>
+  <ul class="rules">
+    <li><svg viewBox="0 0 64 56"><path d="M10 50C20 40 18 30 30 24S44 10 54 6" fill="none" stroke="#d3202e" stroke-width="3"/><circle cx="22" cy="36" r="5" fill="none" stroke="#232c57" stroke-width="2"/><path d="M40 20c3-1 6 1 6 4l1 10c0 4-3 7-7 7h-4c-3 0-5-2-6-4l-4-7c-1-2 1-4 3-3l3 2V12c0-2 2-3 3-3s3 1 3 3z" fill="#efe5cf" stroke="#232c57" stroke-width="1.6"/></svg><div><b></b><span></span></div></li>
+    <li><svg viewBox="0 0 64 56"><path d="M32 4v48" stroke="#d3202e" stroke-width="3"/><path d="M8 40L56 16" stroke="#efe5cf" stroke-width="8"/><path d="M8 40L56 16" stroke="#a8285f" stroke-width="3"/><path d="M10 14L54 42" stroke="#e7dcc3" stroke-width="8"/><path d="M10 14L54 42" stroke="#c9542e" stroke-width="3"/><path d="M40 47l12 -4" stroke="#232c57" stroke-width="1.6" marker-end="none"/><path d="M48 39l5 4-5 3" fill="none" stroke="#232c57" stroke-width="1.6"/></svg><div><b></b><span></span></div></li>
+    <li><svg viewBox="0 0 64 56"><path d="M32 54V30" stroke="#d3202e" stroke-width="3"/><path d="M32 30C22 22 14 18 10 6" fill="none" stroke="#e6a59b" stroke-width="3"/><path d="M32 30c0-8 1-16 0-24" fill="none" stroke="#d3202e" stroke-width="3" stroke-dasharray="1 0"/><path d="M32 30c10-6 16-12 22-18" fill="none" stroke="#d3202e" stroke-width="2.4"/><path d="M41 23l3 -5M47 17l4 1M37 26l-2 -4" stroke="#d3202e" stroke-width="1"/><rect x="2" y="2" width="14" height="10" fill="#232c57"/></svg><div><b></b><span></span></div></li>
+  </ul>
+  <p id="howFoot"></p>
+  <p id="howCredit"></p>
+  <button class="close" id="bHowClose">もどる</button>
+</div></div>
+
+<div id="ovBook" class="ovl" hidden><div class="sheet">
+  <h2 id="bookTitle">図鑑</h2>
+  <div id="bookCount"></div>
+  <div id="bookGrid"></div>
+  <button class="close" id="bBookClose">もどる</button>
+</div></div>
+
+<script>
+// ブラウザの拡大を止める（ピンチ・ダブルタップ・トラックパッドのピンチ・Ctrl+ホイール/キー）
+(function(){
+  var opt={passive:false};
+  ['gesturestart','gesturechange','gestureend'].forEach(function(n){document.addEventListener(n,function(e){e.preventDefault()},opt)});
+  document.addEventListener('touchmove',function(e){if(e.touches&&e.touches.length>1)e.preventDefault()},opt);
+  var last=0;document.addEventListener('touchend',function(e){var n=Date.now();if(n-last<300&&!(e.target.closest&&e.target.closest('button,a')))e.preventDefault();last=n},opt);
+  document.addEventListener('dblclick',function(e){e.preventDefault()},opt);
+  window.addEventListener('wheel',function(e){if(e.ctrlKey)e.preventDefault()},opt);
+  window.addEventListener('keydown',function(e){if((e.ctrlKey||e.metaKey)&&['+','-','=','0',';'].indexOf(e.key)>=0)e.preventDefault()});
+})();
+// 起動失敗の保険。JS が動いたか（__jsUp）で判定し、読み込み中は失敗と出さない
+(function(){
+  var errs=[];
+  window.addEventListener('error',function(e){errs.push((e.message||'error')+' @'+(e.filename||'')+':'+(e.lineno||''))});
+  window.addEventListener('unhandledrejection',function(e){errs.push('reject: '+(e.reason&&e.reason.message||e.reason))});
+  setTimeout(function(){
+    if(window.__jsUp) return;
+    var d=document.createElement('div');d.id='boot-err';
+    d.textContent='起動できませんでした / failed to start\n'+(errs.join('\n')||'(no error captured)')+'\n'+navigator.userAgent;
+    document.body.appendChild(d);
+  },6000);
+})();
+</script>
+<script src="tm.js?v=1" data-game="akai-ito"></script>
+<script src="config.js?v=1"></script>
+<script src="sfx.js?v=1"></script>
+<script src="data.js?v=1"></script>
+<script src="game.js?v=1"></script>
+<script src="support.js?v=1" data-ja="糸こんにゃく" data-en="some konjac noodles"></script>
+</body>
+</html>
