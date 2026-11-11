@@ -38,7 +38,7 @@ button,canvas{touch-action:manipulation}
 #loadTxt{font-family:var(--brush);font-size:18px;letter-spacing:.08em}
 
 /* タイトル */
-#vTitle{display:flex;flex-direction:column;padding:calc(10px + env(safe-area-inset-top)) 16px calc(12px + env(safe-area-inset-bottom))}
+#vTitle{display:flex;flex-direction:column;padding:calc(10px + env(safe-area-inset-top)) 16px calc(12px + calc(env(safe-area-inset-bottom) + var(--inapp-bot,0px)))}
 #vTitle::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(239,229,207,.92) 0%,rgba(239,229,207,.55) 34%,rgba(239,229,207,0) 52%,rgba(239,229,207,0) 62%,rgba(239,229,207,.9) 80%);pointer-events:none}
 .topBtns{position:relative;display:flex;justify-content:flex-end;gap:6px;flex:none}
 .sbtn{min-width:44px;min-height:40px;padding:0 10px;font-size:13px;font-weight:700;color:var(--ink);border:1.5px solid rgba(35,44,87,.55);border-radius:4px;background:rgba(239,229,207,.75)}
@@ -90,7 +90,7 @@ button,canvas{touch-action:manipulation}
 .pbtn{min-height:48px;min-width:160px;padding:0 20px;background:var(--paper);border:2px solid var(--ink);border-radius:4px;font-size:16px;font-weight:700}
 
 /* 結果: おみくじの紙 */
-#vResult{display:flex;justify-content:center;align-items:stretch;padding:calc(8px + env(safe-area-inset-top)) 12px calc(8px + env(safe-area-inset-bottom));background:rgba(35,44,87,.55)}
+#vResult{display:flex;justify-content:center;align-items:stretch;padding:calc(8px + env(safe-area-inset-top)) 12px calc(8px + calc(env(safe-area-inset-bottom) + var(--inapp-bot,0px)));background:rgba(35,44,87,.55)}
 #slip{position:relative;width:min(100%,420px);display:flex;flex-direction:column;align-items:center;background:var(--paper);border:1.5px solid var(--ink);padding:10px 14px 10px;box-shadow:0 6px 24px rgba(0,0,0,.35)}
 #slip::before{content:"";position:absolute;inset:4px;border:1px solid rgba(35,44,87,.35);pointer-events:none}
 #rHead{display:flex;align-items:center;gap:8px;flex:none;width:100%}
@@ -114,7 +114,7 @@ button,canvas{touch-action:manipulation}
 #affNote{font-size:12px;color:var(--ink2)}
 
 /* 遊び方・図鑑 */
-.ovl{position:fixed;inset:0;z-index:30;background:rgba(35,44,87,.6);display:flex;justify-content:center;align-items:center;padding:calc(10px + env(safe-area-inset-top)) 12px calc(10px + env(safe-area-inset-bottom))}
+.ovl{position:fixed;inset:0;z-index:30;background:rgba(35,44,87,.6);display:flex;justify-content:center;align-items:center;padding:calc(10px + env(safe-area-inset-top)) 12px calc(10px + calc(env(safe-area-inset-bottom) + var(--inapp-bot,0px)))}
 .sheet{position:relative;width:min(100%,420px);max-height:100%;display:flex;flex-direction:column;background:var(--paper);border:1.5px solid var(--ink);padding:14px 16px 12px;box-shadow:0 6px 24px rgba(0,0,0,.35)}
 .sheet h2{font-family:var(--brush);font-weight:400;font-size:26px;line-height:1.2;flex:none}
 .rules{list-style:none;display:flex;flex-direction:column;gap:10px;margin-top:10px;flex:1 1 auto;min-height:0}
@@ -232,6 +232,6 @@ button,canvas{touch-action:manipulation}
 <script src="sfx.js?v=2"></script>
 <script src="data.js?v=1"></script>
 <script src="game.js?v=1"></script>
-<script src="support.js?v=2" data-ja="糸こんにゃく" data-en="some konjac noodles"></script>
+<script src="support.js?v=3" data-ja="糸こんにゃく" data-en="some konjac noodles"></script>
 </body>
 </html>
